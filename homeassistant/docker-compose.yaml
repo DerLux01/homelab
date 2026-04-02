@@ -1,6 +1,6 @@
 services:
   homeassistant:
-    container_name: homeassistant:stable
+    container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
       - /home/derlux/homelab/homeassitant:/config
