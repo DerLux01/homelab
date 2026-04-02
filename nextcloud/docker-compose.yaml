@@ -1,0 +1,38 @@
+services:
+  mariadb:
+    image: mariadb:stable
+    restart: always
+    command: >
+      --transaction-isolation=READ-COMMITTED
+      --binlog-format=ROW
+      --innodb-file-per-table=1
+      --skip-innodb-read-only-compressed
+    ports:
+      - 9022:3306
+    volumes:
+      - /home/derlux/homelab/nextcloud/mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+
+  nextcloud:
+    image: nextcloud:stable
+    container_name: nextcloud
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - mariadb:mysql
+    volumes:
+      - /home/derlux/homelab/nextcloud-app/apache-servername.conf:/etc/apache2/conf-enabled/servername.conf
+      - /home/derlux/homelab/nextcloud/nextcloud:/var/www/html
+      - /home/derlux/homelab/nextcloud/apps:/var/www/html/custom_apps
+      - /home/derlux/homelab/nextcloud/config:/var/www/html/config
+      - /mnt/sdb/nextcloud-data:/var/www/html/data
+    environment:
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=mariadb

@@ -1,0 +1,14 @@
+services:
+  homeassistant:
+    container_name: homeassistant:stable
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /home/derlux/homelab/homeassitant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    ports:
+      - 8123:8123
+    privileged: true
+    environment:
+      TZ: Europe/Berlin
